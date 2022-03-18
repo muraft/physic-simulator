@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Physic Simulation</title>
+
+    <style type="text/css">
+      #canvas {
+        border: 1px solid black;
+      }
+    </style>
+
+  </head>
+  <body align="center">
+    <canvas id="canvas" width="400" height="500"></canvas>
+    <br>
+    Refresh the page to restart
+
+    <script>
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const gravity = 0.05;
+
+      class Ball{
+        constructor(x,y,velocity,angle,colour){
+          this.x = x;
+          this.y = y;
+          this.r = 10;
+          this.velocityX = velocity * Math.cos(angle*180/Math.PI);
+          this.velocityY = velocity * Math.sin(angle*180/Math.PI);
+          this.colour=colour;
+          this.elasticity = 0.8;
+          this.friction = 0.05;
+        }
+        update(){
+          this.velocityY+=gravity;
+
+          if(this.x-this.r <= 0){
+            this.x=0+this.r;
+            this.velocityX*=-1*this.elasticity;
+          }
+          if(this.y-this.r <= 0){
+            this.y=0+this.r;
+            this.velocityY*=-1*this.elasticity;
+          }
+          if(this.x+this.r>=canvas.width){
+            this.x=canvas.width-this.r;
+            this.velocityX*=-1*this.elasticity;
+          }
+          if(this.y+this.r>=canvas.height){
+
+            //Stabilize the velocity
+            if(this.velocityY>0 && this.velocityY<0.2){
+              this.y=canvas.height-this.r;
+              this.velocityY=0;
+            }
+            if(this.velocityX>0 && this.velocityX<0.2){
+              this.velocityX=0;
+            }
+
+            //Friction with the floor
+            if(this.velocityX>0){
+              this.velocityX-=this.friction;
+            }
+            if(this.velocityX<0){
+              this.velocityX+=this.friction;
+            }
+
+            //Bump
+            this.velocityY*=-1*this.elasticity;
+          }
+
+
+          this.x+=this.velocityX;
+          this.y+=this.velocityY;
+        }
+        draw(){
+          ctx.fillStyle=this.colour;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+      }
+
+      let ball=[];
+      let colour=["blue", "green", "yellow", "purple", "orange", "black", "pink", "cyan", "gray", "red"]
+      for(let i=0;i<100;i++){
+        ball[i]= new Ball(Math.random()*canvas.width, canvas.height/2,Math.random()*10,Math.random()*360,colour[Math.round(Math.random()*10)]);
+      }
+
+      function run(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ball.forEach((v,i)=>{
+          ball[i].update();
+          ball[i].draw();
+        });
+
+        window.requestAnimationFrame(run);
+      }
+      run()
+    </script>
+  </body>
+</html>
