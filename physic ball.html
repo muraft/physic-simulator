@@ -7,13 +7,15 @@
 
     <style type="text/css">
       #canvas {
+        width : 100%;
+        aspect-ratio : 1;
         border: 1px solid black;
       }
     </style>
 
   </head>
   <body align="center">
-    <canvas id="canvas" width="400" height="500"></canvas>
+    <canvas id="canvas" width="500" height="500"></canvas>
     <br>
     Refresh the page to restart
 
@@ -51,11 +53,11 @@
           if(this.y+this.r>=canvas.height){
 
             //Stabilize the velocity
-            if(this.velocityY>0 && this.velocityY<0.2){
+            if(this.velocityY>0 && this.velocityY<0.1){
               this.y=canvas.height-this.r;
               this.velocityY=0;
             }
-            if(this.velocityX>0 && this.velocityX<0.2){
+            if(this.velocityX>0 && this.velocityX<0.1){
               this.velocityX=0;
             }
 
