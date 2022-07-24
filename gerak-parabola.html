@@ -96,7 +96,7 @@
         Sudut
       </label>
       <br>
-      0°<input type="range" min="0" max="90" id="sudut">90°
+      0°<input type="range" value="45" min="0" max="90" id="sudut">90°
       <br>
       <button id="luncurkan" onclick="luncurkan()">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
@@ -114,15 +114,15 @@
           <td>
             Sudut
           </td>
-          <td>
-           : ?? 
+          <td id="outputSudut">
+           : 45°
           </td>
         <tr>
         <tr>
           <td>
             Kecepatan
           </td>
-          <td>
+          <td id="outputKecepatan">
            : ?? 
           </td>
         <tr>
@@ -177,12 +177,57 @@
       </table>
     </div>
 	<script>
+	  const inputV0=document.getElementById('v0');
+	  const inputSudut=document.getElementById('sudut');
+	  const inputJarak=document.getElementById('jarak');
+	  const inputKetinggian=document.getElementById('ketinggian');
+	  const outputSudut=document.getElementById('outputSudut');
+	  const outputKecepatan=document.getElementById('outputKecepatan');
+	  const canvas=document.querySelector('#layar canvas');
+	  const ctx=canvas.getContext('2d');
+	  let jalan=false;
+	  
+	  function keRadian(derajat){
+	    return derajat*(Math.PI/180);
+	  }
+	  
 	  window.onload=()=>{
-	    const jarak=document.getElementById('jarak');
-	    const ketinggian=document.getElementById('ketinggian');
-	    const canvas=document.querySelector('#layar canvas');
 	    jarak.style.width=canvas.offsetWidth+'px';
 	    ketinggian.style.height=canvas.offsetHeight+'px';
+	  }
+	  const nilai={
+	    sudut: keRadian(inputSudut.value),
+	    v0: inputV0.value
+	  }
+	  inputSudut.oninput=()=>{
+	    nilai.sudut=keRadian(inputSudut.value);
+	    outputSudut.innerText=': '+inputSudut.value+'°';
+	    console.log(Math.sin(nilai.sudut))
+	  }
+	  inputV0.oninput=()=>nilai.v0=inputV0.value;
+	  const meriam={
+	    x: 0,
+	    y: canvas.height-50,
+	    panjang: 50,
+	    lebar: 10
+	  }
+	  function animasi(){
+	    ctx.clearRect(0,0,canvas.width,canvas.height)
+	    gambarMeriam();
+	    
+	    if(jalan)window.requestAnimationFrame(animasi)
+	  }
+	  function luncurkan(){
+	    jalan=true;
+	    animasi();
+	  }
+	  function gambarMeriam(){
+	    ctx.translate(meriam.x+meriam.panjang/2,meriam.y+meriam.lebar/2); 
+      ctx.rotate(-nilai.sudut); 
+      ctx.translate(-(meriam.x+meriam.panjang/2),-(meriam.y+meriam.lebar/2));
+	    
+	    ctx.fillRect(meriam.x,meriam.y,meriam.panjang,meriam.lebar);
+	    ctx.resetTransform();
 	  }
 	</script>
   </body>
