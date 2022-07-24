@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simulasi Gerak Parabola</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body{
+       background-color: gray;
+       color: white;
+      }
+      #layar{
+        padding: 5px;
+        width: calc(100% - 10px);
+      }
+      #layar canvas{
+        border: 2px solid white;
+        border-radius: 10px;
+        width: calc(100% - 40px);
+        aspect-ratio: 16:9;
+        display: inline;
+      }
+      #ketinggian{
+        -webkit-appearance: slider-vertical;
+        writing-mode: bt-lr;
+        width: 10px;
+      }
+      #jarak{
+        position: relative;
+        right: 0px;
+      }
+      #pengaturan,#status,#layar{
+        width: calc(100% - 70px);
+        margin: 5px;
+        border: 2px solid white;
+        border-radius: 10px;
+        margin: 10px 30px;
+        padding: 10px;
+      }
+      #pengaturan input[type="number"]{
+        width: auto;
+        border: none;
+        border-bottom: 1px solid white;
+        margin-top: 2px;
+        margin-bottom: 10px;
+        background-color: transparent;
+        color: white;
+        transition: 0.5s;
+      }
+      #pengaturan input[type="number"]:focus{
+        border: 2px solid white;
+        background-color: #adadad;
+        outline: none;
+        border-radius: 5px;
+      }
+      #pengaturan button{
+        background-color: transparent;
+        border: 1px solid white;
+        border-radius: 10px;
+        width: 110px;
+        height: 50px;
+        margin-top: 20px;
+        color: white;
+        font-size: 15px;
+        transition: 1s;
+      }
+      #pengaturan button:active{
+        background-color: #adadad;
+        border: 2px dashed white;
+      }
+    </style>
+  </head>
+  <body>
+    <center><h2>Simulasi gerak parabola</h2></center>
+    <div id="layar">
+      <input type="range" orient="vertical" id="ketinggian">
+      <canvas></canvas>
+      <br>
+      0 <input type="range" id="jarak">
+    </div>
+    
+    <div id="pengaturan" align="left">
+      <label for="v0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-speedometer" viewBox="0 0 16 16">
+          <path d="M8 2a.5.5 0 0 1 .5.5V4a.5.5 0 0 1-1 0V2.5A.5.5 0 0 1 8 2zM3.732 3.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 8a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 8zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 7.31A.91.91 0 1 0 8.85 8.569l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
+          <path fill-rule="evenodd" d="M6.664 15.889A8 8 0 1 1 9.336.11a8 8 0 0 1-2.672 15.78zm-4.665-4.283A11.945 11.945 0 0 1 8 10c2.186 0 4.236.585 6.001 1.606a7 7 0 1 0-12.002 0z"/>
+        </svg>
+        Kecepatan awal
+      </label>
+      <br>
+      <input type="number" id="v0">m/s
+      <br>
+      <label for="sudut">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707l-4.096 4.096z"/>
+        </svg>
+        Sudut
+      </label>
+      <br>
+      0°<input type="range" min="0" max="90" id="sudut">90°
+      <br>
+      <button id="luncurkan" onclick="luncurkan()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+          <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+        </svg>
+        Luncurkan
+      </button>
+    </div>
+    <div id="status">
+      <table width="100%">
+        <tr>
+          <th colspan="2">Status</th>
+        </tr>
+        <tr>
+          <td>
+            Sudut
+          </td>
+          <td>
+           : ?? 
+          </td>
+        <tr>
+        <tr>
+          <td>
+            Kecepatan
+          </td>
+          <td>
+           : ?? 
+          </td>
+        <tr>
+        <tr>
+          <td>
+            Kecepatan sumbu x
+          </td>
+          <td>
+           : ?? 
+          </td>
+        <tr>
+        <tr>
+          <td>
+            Kecepatan sumbu y
+          </td>
+          <td>
+           : ?? 
+          </td>
+        <tr>
+        <tr>
+          <td>
+            Jarak (x)
+          </td>
+          <td>
+           : ?? 
+          </td>
+        <tr>
+        <tr>
+          <td>
+            Ketinggian (y)
+          </td>
+          <td>
+           : ?? 
+          </td>
+        <tr>
+        <tr>
+          <td>
+            Jarak Maksimum (x max)
+          </td>
+          <td>
+           : ?? 
+          </td>
+        <tr>
+        <tr>
+          <td>
+            Ketinggian Maksimum (y max)
+          </td>
+          <td>
+           : ?? 
+          </td>
+        <tr>
+      </table>
+    </div>
+	<script>
+	  window.onload=()=>{
+	    const jarak=document.getElementById('jarak');
+	    const ketinggian=document.getElementById('ketinggian');
+	    const canvas=document.querySelector('#layar canvas');
+	    jarak.style.width=canvas.offsetWidth+'px';
+	    ketinggian.style.height=canvas.offsetHeight+'px';
+	  }
+	</script>
+  </body>
+</html>
